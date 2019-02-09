@@ -1,0 +1,5 @@
+kind: ServiceAccount      #creating a serviceAccount for Jenkins pod to talk with-
+apiVersion: v1            #Cluster's api server
+metadata:
+  name: jenkins-admin   #Name of the Service-account
+  namespace: default
