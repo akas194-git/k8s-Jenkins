@@ -1,3 +1,4 @@
+
 kind: Deployment
 apiVersion: apps/v1
 metadata:
@@ -14,17 +15,19 @@ spec:
       labels:
         app: jenkins-server
     spec:
+      serviceAccountName: jenkins-admin  #providing pod the permission as mentioned in the serviceAccount.
       containers:
       - name: jenkins-k8s
         image: akas194/k8s-jenkins:v1
-
+        securityContext:
+          privileged: true
         ports:
         - name: jenkins-port
           containerPort: 8080     #the readiness port(tcp socket) checks this port not the pods port.
-    #    readinessProbe:
-    #     initialDelaySeconds: 30
-    #      tcpSocket:        #check readiness on container's port 8080.
-    #        port: 8080
+        readinessProbe:
+          initialDelaySeconds: 30
+          tcpSocket:        #check readiness on container's port 8080.
+            port: 8080
         volumeMounts:
         - mountPath: /var/run/docker.sock
           name: daemon-mount
@@ -32,8 +35,10 @@ spec:
         - mountPath: /var/jenkins_home
           name: jenkinshome-mount
       volumes:
-      - name: docker-daemon
+      - name: daemon-mount
         hostPath:
           path: /var/run/docker.sock
       - name: jenkinshome-mount
         emptyDir: {}
+
+---
