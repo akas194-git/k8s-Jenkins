@@ -1,0 +1,39 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jenkins-on-k8s
+  labels:
+    app: jenkins-server
+spec:
+  selector:
+    matchLabels:
+      app: jenkins-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jenkins-server
+    spec:
+      containers:
+      - name: jenkins-k8s
+        image: akas194/k8s-jenkins:v1
+
+        ports:
+        - name: jenkins-port
+          containerPort: 8080     #the readiness port(tcp socket) checks this port not the pods port.
+    #    readinessProbe:
+    #     initialDelaySeconds: 30
+    #      tcpSocket:        #check readiness on container's port 8080.
+    #        port: 8080
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: daemon-mount
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: jenkinshome-mount
+      volumes:
+      - name: docker-daemon
+        hostPath:
+          path: /var/run/docker.sock
+      - name: jenkinshome-mount
+        emptyDir: {}
