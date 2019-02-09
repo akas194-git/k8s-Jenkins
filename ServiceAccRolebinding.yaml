@@ -1,0 +1,17 @@
+kind: ClusterRoleBinding              #binding the cluster role to ServiceAccount- jenkins-admin at default namespace
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: jenkinspodrole
+roleRef:  #referencing to the role to bind.
+  kind: ClusterRole  ##this must be Role or ClusterRole. Here ClusterRoleBinding
+  apiGroup: rbac.authorization.k8s.io #it is the group for the resource being referenced to.----> RBAC
+
+  name: cluster-admin #this must match the name of the Role or ClusterRole we wish to bind to.
+subjects: #Binding roles to subjects. Subjects can be a single user (User) or a group of user(Group)
+- kind: ServiceAccount      #or a Service Accounts(ServiceAccount)
+  name: jenkins-admin #the serviceaccount created in default namespace.
+  namespace: default  #the namespace of serviceaccount located
+  apiGroup: ""
+
+
+  #NOTE: this pod jenkins-admin has the privilege to control all the activities of K8s cluster.
