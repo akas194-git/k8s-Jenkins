@@ -32,7 +32,7 @@ spec:
   selector:
     app: pulfrmmydkrh
   type: LoadBalancer
-#type: LoadBalancer why is type not required with ingress ??
+#type: LoadBalancer why is type not required with ingress ?? because ingress is different service. Use NodePort for AWS ALB.
   ports:
   - name: service-port
     port: 80
